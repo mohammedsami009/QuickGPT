@@ -1,0 +1,39 @@
+/* Import Tailwind first */
+@import "tailwindcss";
+
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+
+/* Global font */
+* {
+  font-family: "Outfit", sans-serif;
+}
+
+/* Dark mode variant */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Custom theme variables */
+@theme {
+  --color-primary: #e6ccff;
+}
+
+/* Hide scrollbar */
+::-webkit-scrollbar {
+  display: none;
+}
+
+.reset-tw :not(pre):not(code){
+  all:revert;
+} 
+/* //Notice the space after .reset-tw.
+
+.reset-tw ... → applies to children inside .reset-tw.
+
+.reset-tw... (no space) → applies only to the element with .reset-tw itself. */
+
+.loader div:nth-child(2){
+  animation-delay:0.2s;
+}
+.loader div:nth-child(3){
+  animation-delay:0.4s;
+}
