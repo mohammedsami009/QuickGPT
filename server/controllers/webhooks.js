@@ -4,7 +4,7 @@ import User from '../models/user.js'
 
 export const stripeWebHooks = async(req,res)=>{
     const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
-    const sig = request.headers["stripe-signature"]
+    const sig = req.headers["stripe-signature"]
 
     let event;
     try{
@@ -16,15 +16,13 @@ export const stripeWebHooks = async(req,res)=>{
         switch(event.type){
             case "payment_intent.succeeded":{
                 const paymentIntent = event.data.object;
-                const sessionList = await stripe.checkout.list({
-                    payment_intent: paymentIntent.id,
-                })
+                const sessions = await stripe.checkout.sessions.list({ payment_intent: paymentIntent.id });
+const session = sessions.data[0];
 
-                const session = sessionList.data[0];
-                const {transactionID,appId} = session.metadata;
+                const {TransactionId,appId} = session.metadata;
 
                 if(appId === 'quickgpt'){
-                    const transaction = await Transaction.findOne({_id:transactionID,isPaid:false})
+                    const transaction = await Transaction.findOne({_id:TransactionId,isPaid:false})
                      //update credits in user accout
 
                 await User.updateOne({_id:transaction.userId},{$inc:{credits:transaction.credits}})

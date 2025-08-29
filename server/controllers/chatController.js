@@ -41,15 +41,19 @@ export const getChat = async(req,res)=>{
 export const deleteChat = async(req,res)=>{
     try {
         const userId = req.user._id
-
         const {chatId} = req.body
-
-        await Chat.deleteOne({_id:chatId,userId})
-
         
-        res.json({success:true,chats})
+        console.log('Deleting chat:', chatId, 'for user:', userId)
+        
+        const result = await Chat.deleteOne({_id:chatId,userId})
+        
+        if (result.deletedCount === 0) {
+            return res.json({success:false, message:"Chat not found or not authorized"})
+        }
+        
+        res.json({success:true, message:"Chat deleted successfully"})
     } catch (error) {
+        console.error('Delete chat error:', error)
         res.json({success:false,message:error.message});
-        
     }
 }
